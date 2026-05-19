@@ -1,31 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   element_validation.c                               :+:      :+:    :+:   */
+/*   custom_functions.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: opapouts <opapouts@learner.42.tech>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/05/19 20:16:19 by opapouts          #+#    #+#             */
-/*   Updated: 2026/05/19 20:16:22 by opapouts         ###   ########.fr       */
+/*   Created: 2026/05/19 20:15:40 by opapouts          #+#    #+#             */
+/*   Updated: 2026/05/19 20:16:03 by opapouts         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//This file will contain the validation of the N S W E F C elements
-//We will play with gnl open and split in order to get those values and
-//compare them with the accepted values
 #include "../../includes/cub3d.h"
 
-
-void	first_step(int ac, char **av)
+void	custom_error(char *msg)
 {
-	int	fd;
-	if (ac != 2)
-	{
-		write(2, "Wrong number of arguments", 25);
-		exit(EXIT_SUCCESS);
-	}
-	fd = open(av[1], O_RDONLY);
-	if (fd < 0)
-		exit(EXIT_SUCCESS);//A modifier
 	
-}

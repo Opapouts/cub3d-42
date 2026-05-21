@@ -46,7 +46,7 @@ bool	is_xpm_file(char *path)
 	return (true);
 }
 
-static void	free_split(char **split)
+void	free_split(char **split)
 {
 	int	i;
 

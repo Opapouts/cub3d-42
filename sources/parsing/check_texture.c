@@ -51,11 +51,20 @@ static	void	set_elem_to_null(t_elem *elem)
 		elem->paths[i++] = NULL;
 	elem->ceiling_color = 0;
 	elem->floor_color = 0;
+	elem->tmp = 0;
 }
 //gnl->check if gnl failed->empty_line->if empty_line free line and continue gnl
 //					->if not empty_line check the content
 //					->if NEITHER return false
 //					->else check the path and save that somewhere and check for doublicates
+/*void	process_line(char *line)
+{
+	if (!line)
+		return (custom_write("Gnl error\n"));
+	if (empty_line(line))
+		free(line);
+}*/
+
 bool	init_elem(int fd)
 {
 	int		counter;
@@ -76,9 +85,9 @@ bool	init_elem(int fd)
 		while (space(line[i]))
 			i++;
 		if (texture_or_color(line) == COLOR)
-			handle_color(&elem, line);
+			handle_color(&elem, &line[i]);
 		else if (texture_or_color(line) == TEXTURE)
-			handle_texture(&elem, line);
+			handle_texture(&elem, &line[i]);
 		else if (texture_or_color(line) == NEITHER)
 			exit(EXIT_FAILURE);//TO DO
 

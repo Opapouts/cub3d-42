@@ -35,19 +35,46 @@ enum
 //1)The elements encountered
 //2)The color int
 //3)The paths
+typedef	struct	s_coordinate
+{
+	bool	present;
+	char	*path;
+}		t_coordinate;
+
+typedef struct	s_color
+{
+	bool	present;
+	int	color;
+}		t_color;
+
+enum
+{
+	NORTH,
+	SOUTH,
+	EAST,
+	WEST
+};
+
 typedef struct	s_elem
 {
-	char	*elements[6];
-	char	*paths[4];
-	int	ceiling_color;
-	int	floor_color;
+	t_coordinate	north;
+	t_coordinate	south;
+	t_coordinate	east;
+	t_coordinate	west;
+	t_color		floor;
+	t_color		ceiling;
+	int	tmp;
 
 }		t_elem;
 
 bool	is_cub_file(int ac, char **av);
 bool	is_xpm_file(char *path);
 bool	is_rgb(char *color);
+bool	init_elem(int fd);
+bool	handle_color(t_elem *elem, char *line);
+bool	handle_texture(t_elem *elem, char *line);
 
 bool	space(char c);
 void	custom_write(char *msg);
+void	free_split(char **split);
 #endif

@@ -22,8 +22,8 @@
 
 
 /***********************************************************
- *                         Parsing                          *
- ***********************************************************/
+*                         Parsing                          *
+***********************************************************/
 
 enum
 {
@@ -31,11 +31,16 @@ enum
 	COLOR,
 	NEITHER
 };
-
+//We need a struct that will save the following things
+//1)The elements encountered
+//2)The color int
+//3)The paths
 typedef struct	s_elem
 {
 	char	*elements[6];
 	char	*paths[4];
+	int	ceiling_color;
+	int	floor_color;
 
 }		t_elem;
 

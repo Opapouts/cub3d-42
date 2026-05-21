@@ -25,6 +25,13 @@
  *                         Parsing                          *
  ***********************************************************/
 
+enum
+{
+	TEXTURE,
+	COLOR,
+	NEITHER
+};
+
 typedef struct	s_elem
 {
 	char	*elements[6];
@@ -32,5 +39,10 @@ typedef struct	s_elem
 
 }		t_elem;
 
-void	first_step(int ac, char **av);
+bool	is_cub_file(int ac, char **av);
+bool	is_xpm_file(char *path);
+bool	is_rgb(char *color);
+
+bool	space(char c);
+void	custom_write(char *msg);
 #endif

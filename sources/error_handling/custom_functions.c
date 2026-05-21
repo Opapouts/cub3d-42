@@ -12,6 +12,10 @@
 //Testing github email modifications
 #include "../../includes/cub3d.h"
 
-void	custom_error(char *msg)
+void	custom_write(char *msg)
 {
-	
+	int	len;
+
+	len = ft_strlen(msg);
+	write(2, msg, len);
+}

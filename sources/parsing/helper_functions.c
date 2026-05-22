@@ -69,7 +69,7 @@ static	bool	bounds_check(char **split)
 			i++;
 		while (split[j][i])
 		{
-			if (split[j][i] < 48 && split[j][i] > 57)
+			if (split[j][i] < 48 || split[j][i] > 57)
 				return (custom_write("Wrong color input\n"), false);
 			i++;
 		}

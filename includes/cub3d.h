@@ -64,6 +64,7 @@ typedef struct	s_elem
 	t_color		floor;
 	t_color		ceiling;
 	int	tmp;
+	char	*tmp_path;
 
 }		t_elem;
 

@@ -10,13 +10,17 @@ static bool	set_color(t_elem *elem, char *line)
 	int		green;
 	int		blue;
 
-	split = ft_split(line, ',');
+	if (!is_rgb(line + 1))
+		return (false);
+	split = ft_split(line + 1, ',');
 	if (!split)
 		return (custom_write("Split error\n"), false);
 	red = ft_atoi(split[0]);
 	green = ft_atoi(split[1]);
 	blue = ft_atoi(split[2]);
 	elem->tmp = (red << 16) | (green << 8) | blue;
+	free_split(split);
+	split = NULL;
 	return (true);
 }
 

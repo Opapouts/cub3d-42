@@ -6,23 +6,23 @@
 //each segment except the map
 //we will need to do a bunch of gnl until we find a line with some content inside
 
-static int	texture_or_color(char *s)
-{
-	if (((s[0] == 'N' && s[1] == 'O') || (s[0] == 'S' && s[1] == 'O')
-			|| (s[0] == 'W' && s[1] == 'E') || (s[0] == 'E' && s[1] == 'A'))
-			&& s[2] == ' ')
-		return (TEXTURE);
-	else if ((s[0] == 'F' || s[0] == 'C') && s[1] == ' ')
-		return (COLOR);
-	else
-		return (NEITHER);
-}
-
 bool	space(char c)
 {
 	if (c == ' ' || (c >= 9 && c <= 13))
 		return (true);
 	return (false);
+}
+
+static int	texture_or_color(char *s)
+{
+	if (((s[0] == 'N' && s[1] == 'O') || (s[0] == 'S' && s[1] == 'O')
+			|| (s[0] == 'W' && s[1] == 'E') || (s[0] == 'E' && s[1] == 'A'))
+			&& space(s[2]))
+		return (TEXTURE);
+	else if ((s[0] == 'F' || s[0] == 'C') && s[1] == ' ')
+		return (COLOR);
+	else
+		return (NEITHER);
 }
 
 static	bool	empty_line(char *line)
@@ -44,26 +44,25 @@ static	void	set_elem_to_null(t_elem *elem)
 	int	i;
 
 	i = 0;
-	while (i < 6)
-		elem->elements[i++] = NULL;
-	i = 0;
-	while (i < 4)
-		elem->paths[i++] = NULL;
-	elem->ceiling_color = 0;
-	elem->floor_color = 0;
 	elem->tmp = 0;
+	elem->north.present = false;
+	elem->north.path = NULL;
+	elem->south.present = false;
+	elem->south.path = NULL;
+	elem->east.present = false;
+	elem->east.path = NULL;
+	elem->west.present = false;
+	elem->west.path = NULL;
+	elem->floor.present = false;
+	elem->floor.color = 0;
+	elem->ceiling.present = false;
+	elem->ceiling.color = 0;
+	elem->tmp_path = NULL;
 }
 //gnl->check if gnl failed->empty_line->if empty_line free line and continue gnl
 //					->if not empty_line check the content
 //					->if NEITHER return false
 //					->else check the path and save that somewhere and check for doublicates
-/*void	process_line(char *line)
-{
-	if (!line)
-		return (custom_write("Gnl error\n"));
-	if (empty_line(line))
-		free(line);
-}*/
 
 bool	init_elem(int fd)
 {

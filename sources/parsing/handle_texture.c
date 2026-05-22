@@ -93,7 +93,6 @@ bool	handle_texture(t_elem *elem, char *line)
 	int		fd;
 
 	i = 2;
-
 	while (space(line[i]))
 		i++;
 	start = i;
@@ -106,7 +105,8 @@ bool	handle_texture(t_elem *elem, char *line)
 		return (false);
 	fd = open(elem->tmp_path, O_RDONLY);
 	if (fd < 0)
-		return (free(elem->tmp_path), custom_write("Wrong texture path\n"), false);
+		return (free(elem->tmp_path),
+			custom_write("Wrong texture path\n"), false);
 	close(fd);
 	fill_out_coordinate(elem, line);
 	free(elem->tmp_path);

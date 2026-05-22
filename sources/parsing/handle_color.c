@@ -3,6 +3,13 @@
 //   F      15,   250,  33
 //Okay we need to handle the color case. We will receive the full line
 //First we need to skip the spaces
+bool	space(char c)
+{
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return (true);
+	return (false);
+}
+
 static bool	set_color(t_elem *elem, char *line)
 {
 	char	**split;
@@ -45,4 +52,13 @@ bool	handle_color(t_elem *elem, char *line)
 		elem->ceiling.present = true;
 	}
 	return (true);
+}
+
+//Make a function that frees and sets to null a variable
+bool	all_present(t_elem *elem)
+{
+	if (elem->north.present && elem->south.present && elem->east.present
+		&& elem->west.present)
+		return (true);
+	return (false);
 }

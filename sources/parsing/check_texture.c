@@ -1,25 +1,26 @@
 #include "../../includes/cub3d.h"
 
-//At this point the .cub file is open. What we need to do here is to check that the texture files are really
-//.xpm and that the path is valid and that we can open it. It would be nice if we could handle the colors in 
-//this file as well. Meaning, this file will have the necessary functions that will read the opened file and verify
-//each segment except the map
-//we will need to do a bunch of gnl until we find a line with some content inside
-
-bool	space(char c)
-{
-	if (c == ' ' || (c >= 9 && c <= 13))
-		return (true);
-	return (false);
-}
+//At this point the .cub file is open. What we need to do here is to check 
+//that the texture files are really .xpm and that the path is valid and 
+//that we can open it. It would be nice if we could handle the colors in 
+//this file as well. Meaning, this file will have the necessary functions 
+//that will read the opened file and verify each segment except the map
+//we will need to do a bunch of gnl until we 
+//find a line with some content inside
 
 static int	texture_or_color(char *s)
 {
-	if (((s[0] == 'N' && s[1] == 'O') || (s[0] == 'S' && s[1] == 'O')
-			|| (s[0] == 'W' && s[1] == 'E') || (s[0] == 'E' && s[1] == 'A'))
-			&& space(s[2]))
+	int	i;
+
+	i = 0;
+	while (space(s[i]))
+		i++;
+	if (((s[i] == 'N' && s[i + 1] == 'O') || (s[i] == 'S' && s[i + 1] == 'O')
+			|| (s[i] == 'W' && s[i + 1] == 'E')
+			|| (s[i] == 'E' && s[i + 1] == 'A'))
+		&& space(s[i + 2]))
 		return (TEXTURE);
-	else if ((s[0] == 'F' || s[0] == 'C') && s[1] == ' ')
+	else if ((s[i] == 'F' || s[i] == 'C') && space(s[i + 1]))
 		return (COLOR);
 	else
 		return (NEITHER);
@@ -57,37 +58,58 @@ static	void	set_elem_to_null(t_elem *elem)
 	elem->floor.color = 0;
 	elem->ceiling.present = false;
 	elem->ceiling.color = 0;
+	elem->line = NULL;
 	elem->tmp_path = NULL;
 }
-//gnl->check if gnl failed->empty_line->if empty_line free line and continue gnl
-//					->if not empty_line check the content
-//					->if NEITHER return false
-//					->else check the path and save that somewhere and check for doublicates
 
+bool	process_line(t_elem *elem, int fd)
+{
+	int		i;
+
+	i = 0;
+	elem->line = get_next_line(fd);
+	if (!elem->line)
+		return (custom_write("Gnl error\n"), false);
+	else if (!empty_line(elem->line))
+	{
+		while (space(elem->line[i]))
+			i++;
+		if (texture_or_color(elem->line) == COLOR)
+		{
+			if (!handle_color(elem, &elem->line[i]))
+				return (custom_free(elem->line), false);
+		}
+		else if (texture_or_color(elem->line) == TEXTURE)
+		{
+			if (!handle_texture(elem, &elem->line[i]))
+				return (custom_free(elem->line), false);
+		}
+		else if (texture_or_color(elem->line) == NEITHER)
+			return (custom_free(elem->line), false);
+	}
+	return (true);
+}
+
+//I should be careful with the return (false) to avoid leaks
+//I need to create a different type of data for the gnl returns
+//That way I can differentiate between the malloc error and the eof
 bool	init_elem(int fd)
 {
-	int		counter;
-	int		i;
 	t_elem	elem;
-	char	*line;
 
-	counter = 0;
-	i = 0;
 	set_elem_to_null(&elem);
-	line = get_next_line(fd);
-	if (!line)
-		return (custom_write("Gnl error\n"), false);
-	if (empty_line(line))
-		free(line);
-	else if (!empty_line(line))
+	if (!process_line(&elem, fd))
+		return (false);
+	while (elem.line)
 	{
-		while (space(line[i]))
-			i++;
-		if (texture_or_color(line) == COLOR)
-			handle_color(&elem, &line[i]);
-		else if (texture_or_color(line) == TEXTURE)
-			handle_texture(&elem, &line[i]);
-		else if (texture_or_color(line) == NEITHER)
-			exit(EXIT_FAILURE);//TO DO
-
-
+		free(elem.line);
+		if (!process_line(&elem, fd))
+			return (false);
+		if (all_present(&elem))
+		{
+			free(elem.line);
+			break ;
+		}
+	}
+	return (true);
+}

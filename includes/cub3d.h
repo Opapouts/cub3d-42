@@ -63,6 +63,7 @@ typedef struct	s_elem
 	t_coordinate	west;
 	t_color		floor;
 	t_color		ceiling;
+	char	*line;
 	int	tmp;
 	char	*tmp_path;
 
@@ -74,8 +75,10 @@ bool	is_rgb(char *color);
 bool	init_elem(int fd);
 bool	handle_color(t_elem *elem, char *line);
 bool	handle_texture(t_elem *elem, char *line);
+bool	all_present(t_elem *elem);
 
 bool	space(char c);
 void	custom_write(char *msg);
+void	custom_free(char *str);
 void	free_split(char **split);
 #endif

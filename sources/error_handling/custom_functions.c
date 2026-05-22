@@ -19,3 +19,9 @@ void	custom_write(char *msg)
 	len = ft_strlen(msg);
 	write(2, msg, len);
 }
+
+void	custom_free(char *str)
+{
+	free(str);
+	str = NULL;
+}

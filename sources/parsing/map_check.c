@@ -1,45 +1,64 @@
 #include "../../includes/cub3d.h"
 
-//The map will have a bunch of 1s 0s and one letter for the direction. I need
-//to do a bunch of gnls to get the whole 2d array
-//So here we will be at the end of the textures and colors. We will
-//need to skip all the empty lines until we find the map. The map needs to be
-//the last element in the file
-//The file is already open at this point
 // ***Overhead t_elem struct***
-
-
-static	bool	skip_empty_lines(int fd)
+//We will need to transform this list into a 2d array
+bool	is_valid_char(t_chain *chain)
 {
-	char	*line;
+	int	i;
 
-	line = get_next_line(fd);
-	while (is_empty_line(line))
+	while (chain)
 	{
-		custom_free(line);
-		line = get_next_line(fd);
-		if (!line)
-			return (custom_write("Gnl error"), false);
+		i = 0;
+		while (chain->line[i])
+		{
+			if (chain->line[i] != '0' && chain->line[i] != '1'
+					&& chain->line[i] != 'N' && chain->line[i] != 'S'
+					&& chain->line[i] != 'E' && chain->line[i] != 'W'
+					&& chain->line[i] != ' ')
+				return (custom_write("Not allowed character found"), 
+					free_chain(chain), false);
+			i++;
+		}
+		chain = chain->next;
 	}
 	return (true);
 }
 
-bool	init_array(int fd, t_chain **chain)
+//The map must be completely closed/surrounded by walls (1).
+bool	is_single_player(t_chain *chain)
 {
-	char	*line;
-	t_chain	*tmp;
+	int	players;
+	int	i;
 
-	if (!skip_empty_lines(fd))
-		return (false);
-	line = get_next_line(fd);
-	while (line)
+	players = 0;
+	while (chain)
 	{
-		tmp = new_node(line);
-		if (!new_node(line))
-			return (custom_free(line), free_chain(*chain), false);
-		add_node(chain, tmp);
-		line = get_next_line(fd);
+		i = 0;
+		while (chain->line[i])
+		{
+			if (chain->line[i] == 'N' || chain->line[i] == 'S'
+					|| chain->line[i] == 'E' || chain->line[i] == 'W')
+				players++;
+			i++;
+		}
+		chain = chain->next;
 	}
+	if (players != 1)
+		return (custom_write("Multiple players detected"), free_chain(chain), false);
 	return (true);
 }
-		
+//I am thinking of doing a wrapper function that will take as code left or right, and it will
+//check if there is a 1 at the edge or spaces and after a 1.Do we really need two functions
+//for left and right? We will have this check everywhere so I can make a single function 
+//that makes sure that each line is like this  "    1000000101  "
+static bool	left_wall(t_chain *chain)
+{
+	int	i;
+
+	while (chain)
+	{
+		if (
+
+bool	is_map_closed(t_chain *chain)
+{
+

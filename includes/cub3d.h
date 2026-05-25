@@ -24,17 +24,14 @@
 /***********************************************************
 *                         Parsing                          *
 ***********************************************************/
-
+//Texture & color parsing and validation
 enum
 {
 	TEXTURE,
 	COLOR,
 	NEITHER
 };
-//We need a struct that will save the following things
-//1)The elements encountered
-//2)The color int
-//3)The paths
+
 typedef	struct	s_coordinate
 {
 	bool	present;
@@ -77,6 +74,7 @@ bool	handle_texture(t_elem *elem, char *line);
 bool	all_present(t_elem *elem);
 bool	is_empty_line(char *line);
 
+//Map parsing and validation
 typedef struct	s_chain
 {
 	char	*line;
@@ -85,8 +83,16 @@ typedef struct	s_chain
 
 t_chain	*new_node(char *line);
 void	add_node(t_chain **list, t_chain *node);
+bool	is_valid_char(t_chain *chain);
+bool	is_single_player(t_chain *chain);
 
 
+typedef struct	s_game
+{
+	char	**map;
+}		t_game;
+
+//Random functions
 bool	space(char c);
 void	custom_write(char *msg);
 void	custom_free(char *str);

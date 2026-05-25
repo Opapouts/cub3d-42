@@ -26,7 +26,7 @@ static int	texture_or_color(char *s)
 		return (NEITHER);
 }
 
-static	bool	empty_line(char *line)
+bool	is_empty_line(char *line)
 {
 	int	i;
 
@@ -70,7 +70,7 @@ bool	process_line(t_elem *elem, int fd)
 	elem->line = get_next_line(fd);
 	if (!elem->line)
 		return (custom_write("Gnl error\n"), false);
-	else if (!empty_line(elem->line))
+	else if (!is_empty_line(elem->line))
 	{
 		while (space(elem->line[i]))
 			i++;
@@ -91,25 +91,22 @@ bool	process_line(t_elem *elem, int fd)
 }
 
 //I should be careful with the return (false) to avoid leaks
-//I need to create a different type of data for the gnl returns
-//That way I can differentiate between the malloc error and the eof
-bool	init_elem(int fd)
+bool	init_elem(int fd, t_elem *elem)
 {
-	t_elem	elem;
 
-	set_elem_to_null(&elem);
-	if (!process_line(&elem, fd))
+	set_elem_to_null(elem);
+	if (!process_line(elem, fd))
 		return (false);
-	while (elem.line)
+	while (elem->line)
 	{
-		free(elem.line);
-		if (!process_line(&elem, fd))
-			return (false);
-		if (all_present(&elem))
+		if (all_present(elem))
 		{
-			free(elem.line);
+			custom_free(elem->line);
 			break ;
 		}
+		custom_free(elem->line);
+		if (!process_line(elem, fd))
+			return (false);
 	}
 	return (true);
 }

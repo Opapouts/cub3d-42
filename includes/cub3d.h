@@ -66,19 +66,30 @@ typedef struct	s_elem
 	char	*line;
 	int	tmp;
 	char	*tmp_path;
-
 }		t_elem;
 
 bool	is_cub_file(int ac, char **av);
 bool	is_xpm_file(char *path);
 bool	is_rgb(char *color);
-bool	init_elem(int fd);
+bool	init_elem(int fd, t_elem *elem);
 bool	handle_color(t_elem *elem, char *line);
 bool	handle_texture(t_elem *elem, char *line);
 bool	all_present(t_elem *elem);
+bool	is_empty_line(char *line);
+
+typedef struct	s_chain
+{
+	char	*line;
+	struct s_chain	*next;
+}		t_chain;
+
+t_chain	*new_node(char *line);
+void	add_node(t_chain **list, t_chain *node);
+
 
 bool	space(char c);
 void	custom_write(char *msg);
 void	custom_free(char *str);
 void	free_split(char **split);
+void	free_chain(t_chain *chain);
 #endif

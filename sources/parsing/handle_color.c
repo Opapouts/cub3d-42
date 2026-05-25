@@ -58,7 +58,7 @@ bool	handle_color(t_elem *elem, char *line)
 bool	all_present(t_elem *elem)
 {
 	if (elem->north.present && elem->south.present && elem->east.present
-		&& elem->west.present)
+		&& elem->west.present && elem->floor.present && elem->ceiling.present)
 		return (true);
 	return (false);
 }

@@ -108,8 +108,8 @@ bool	handle_texture(t_elem *elem, char *line)
 		return (free(elem->tmp_path),
 			custom_write("Wrong texture path\n"), false);
 	close(fd);
-	fill_out_coordinate(elem, line);
-	free(elem->tmp_path);
-	elem->tmp_path = NULL;
+	if (!fill_out_coordinate(elem, line))
+		return (custom_free(elem->tmp_path), false);
+	custom_free(elem->tmp_path);
 	return (true);
 }

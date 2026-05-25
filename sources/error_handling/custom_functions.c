@@ -17,6 +17,7 @@ void	custom_write(char *msg)
 	int	len;
 
 	len = ft_strlen(msg);
+	write(2, "Error\n", 6);
 	write(2, msg, len);
 }
 

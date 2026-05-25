@@ -36,3 +36,15 @@ void	add_node(t_chain **list, t_chain *node)
 	tmp->next = node;
 }
 
+int	size_of_chain(t_chain *chain)
+{
+	int	i;
+
+	i = 0;
+	while (chain)
+	{
+		chain = chain->next;
+		i++;
+	}
+	return (i);
+}

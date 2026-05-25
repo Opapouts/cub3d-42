@@ -47,18 +47,4 @@ bool	is_single_player(t_chain *chain)
 		return (custom_write("Multiple players detected"), free_chain(chain), false);
 	return (true);
 }
-//I am thinking of doing a wrapper function that will take as code left or right, and it will
-//check if there is a 1 at the edge or spaces and after a 1.Do we really need two functions
-//for left and right? We will have this check everywhere so I can make a single function 
-//that makes sure that each line is like this  "    1000000101  "
-static bool	left_wall(t_chain *chain)
-{
-	int	i;
-
-	while (chain)
-	{
-		if (
-
-bool	is_map_closed(t_chain *chain)
-{
-
+//Verdict. Floodfill using a 2d array is the way to do it

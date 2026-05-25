@@ -83,13 +83,14 @@ typedef struct	s_chain
 
 t_chain	*new_node(char *line);
 void	add_node(t_chain **list, t_chain *node);
+int	size_of_chain(t_chain *chain);
 bool	is_valid_char(t_chain *chain);
 bool	is_single_player(t_chain *chain);
 
 
 typedef struct	s_game
 {
-	char	**map;
+	char	**map;//Allocated
 }		t_game;
 
 //Random functions

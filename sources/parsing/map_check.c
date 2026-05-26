@@ -24,7 +24,6 @@ bool	is_valid_char(t_chain *chain)
 	return (true);
 }
 
-//The map must be completely closed/surrounded by walls (1).
 bool	is_single_player(t_chain *chain)
 {
 	int	players;
@@ -47,4 +46,3 @@ bool	is_single_player(t_chain *chain)
 		return (custom_write("Multiple players detected"), free_chain(chain), false);
 	return (true);
 }
-//Verdict. Floodfill using a 2d array is the way to do it

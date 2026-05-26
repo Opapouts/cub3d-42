@@ -52,7 +52,7 @@ void	free_split(char **split)
 
 	i = 0;
 	while (split[i])
-		free(split[i++]);
+		custom_free(split[i++]);
 	free(split);
 }
 
@@ -69,7 +69,7 @@ static	bool	bounds_check(char **split)
 			i++;
 		while (split[j][i])
 		{
-			if (split[j][i] < 48 || split[j][i] > 57)
+			if (split[j][i] < '0' || split[j][i] > '9')
 				return (custom_write("Wrong color input\n"), false);
 			i++;
 		}

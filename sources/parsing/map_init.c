@@ -1,6 +1,6 @@
 #include "../../includes/cub3d.h"
 
-static	bool	skip_empty_lines(int fd)
+static char	*skip_empty_lines(int fd)
 {
 	char	*line;
 
@@ -9,29 +9,34 @@ static	bool	skip_empty_lines(int fd)
 	{
 		custom_free(line);
 		line = get_next_line(fd);
-		if (!line)
-			return (custom_write("Gnl error"), false);
 	}
-	return (true);
+	return (line);
 }
 
-bool	init_chain(int fd, t_chain **chain)
+t_chain	*init_chain(int fd)
 {
 	char	*line;
+	t_chain	*chain;
 	t_chain	*tmp;
 
-	if (!skip_empty_lines(fd))
-		return (false);
+	line = skip_empty_lines(fd);
+	if (!line)
+		return (custom_write("Eof reached. No map detected"), NULL);
+	chain = new_node(line);
+	if (!chain)
+		return (NULL);
 	line = get_next_line(fd);
+	if (!line)
+		return (custom_write("Eof reached. No map detected"), NULL);
 	while (line)
 	{
 		tmp = new_node(line);
-		if (!new_node(line))
-			return (custom_free(line), free_chain(*chain), false);
-		add_node(chain, tmp);
+		if (!tmp)
+			return (custom_free(line), free_chain(chain), NULL);
+		add_node(&chain, tmp);
 		line = get_next_line(fd);
 	}
-	return (true);
+	return (chain);
 }
 
 static	bool	chain_to_array(t_game *game, t_chain *chain)
@@ -70,4 +75,7 @@ bool	init_game(t_game *game, t_chain *chain)
 		return (false);
 	if (!chain_to_array(game, chain))
 		return (false);
-
+	if (!is_map_closed(game->map))
+		return (false);
+	return (true);
+}

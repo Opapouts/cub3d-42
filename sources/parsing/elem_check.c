@@ -62,7 +62,7 @@ static	void	set_elem_to_null(t_elem *elem)
 	elem->tmp_path = NULL;
 }
 
-bool	process_line(t_elem *elem, int fd)
+static bool	process_line(t_elem *elem, int fd)
 {
 	int		i;
 
@@ -90,7 +90,6 @@ bool	process_line(t_elem *elem, int fd)
 	return (true);
 }
 
-//I should be careful with the return (false) to avoid leaks
 bool	init_elem(int fd, t_elem *elem)
 {
 

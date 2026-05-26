@@ -81,18 +81,33 @@ typedef struct	s_chain
 	struct s_chain	*next; //Allocated
 }		t_chain;
 
+t_chain	*init_chain(int fd);
 t_chain	*new_node(char *line);
 void	add_node(t_chain **list, t_chain *node);
 int	size_of_chain(t_chain *chain);
 bool	is_valid_char(t_chain *chain);
 bool	is_single_player(t_chain *chain);
-bool	flood_fill(char **map);
 
+typedef	struct	s_config
+{
+	char	*north_path;//All Allocated
+	char	*south_path;
+	char	*east_path;
+	char	*west_path;
+	int	floor_color;
+	int	ceiling_color;
+}		t_config;
 
 typedef struct	s_game
 {
+	t_config	*config;//Allocated
 	char	**map;//Allocated
 }		t_game;
+
+bool	is_map_closed(char **map);
+bool	init_game(t_game *game, t_chain *chain);
+
+
 
 //Random functions
 bool	space(char c);
@@ -100,4 +115,5 @@ void	custom_write(char *msg);
 void	custom_free(char *str);
 void	free_split(char **split);
 void	free_chain(t_chain *chain);
+
 #endif

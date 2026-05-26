@@ -1,38 +1,102 @@
 #include "../../includes/cub3d.h"
 
-static	void	find_player(char **map, int *j, int *i)
+static	void	find_player(char **map, int *x, int *y)
 {
-	while (map[*j])
+	while (map[*y])
 	{
-		*i = 0;
-		while (map[*j][*i])
+		*x = 0;
+		while (map[*y][*x])
 		{
-			if (map[*j][*i] == 'N' || map[*j][*i] == 'S' || map[*j][*i] == 'E'
-					|| map[*j][*i] == 'W')
+			if (map[*y][*x] == 'N' || map[*y][*x] == 'S' || map[*y][*x] == 'E'
+					|| map[*y][*x] == 'W')
 				return ;
-			(*i)++;
+			(*x)++;
 		}
-		(*j)++;
+		(*y)++;
 	}
 }
-//1st step->Put V 
-//2nd step->Try Up
-//If 0 or space call the function for that coordinate
-//If wall move to next check
-//3rd step->Try down(same logic as before)
-//4th step->Try left(same)
-//5th step->Try right(same)
-//Return
-//The failure condition: If the current position is at the edge 
-//of the array the map is invalid
 
-bool	flood_fill(char **map)
+static char	**copy_map(char **map)
 {
-	int	i;
-	int	j;
+	int		i;
+	char	**copy;
 
 	i = 0;
-	j = 0;
-	find_player(map, &j, &i);
+	while (map[i])
+		i++;
+	copy = malloc(sizeof(char *) * (i + 1));
+	if (!copy)
+		return (custom_write("Malloc error"), NULL);
+	i = 0;
+	while (map[i])
+	{
+		copy[i] = ft_strdup(map[i]);
+		if (!copy[i])
+		{
+			while (i >= 0)
+				custom_free(copy[i--]);
+			free(copy);
+			return (custom_write("Malloc error"), NULL);
+		}
+		i++;
+	}
+	copy[i] = NULL;
+	return (copy);
+}
 
+static bool	is_inside_bounds(char **copy, int x, int y)
+{
+	int	height;
+	int	line_length;
 
+	height = 0;
+	line_length = 0;
+	if (y < 0 || x < 0)
+		return (custom_write("Map is not valid\n"), false);
+	while (copy[height])
+		height++;
+	if (y >= height)
+		return (custom_write("Map is not valid\n"), false);
+	while (copy[y][line_length])
+		line_length++;
+	if (x >= line_length)
+		return (custom_write("Map is not valid\n"), false);
+	return (true);
+}
+
+static bool	fill(char **copy, int x, int y)
+{
+	if (!is_inside_bounds(copy, x, y))
+		return (false);
+	if (copy[y][x] == 'V' || copy[y][x] == '1')
+		return (true);
+	if (copy[y][x] == ' ')
+		return (custom_write("Map is not valid\n"), false);
+	copy[y][x] = 'V';
+	if (!fill(copy, x, y - 1))
+		return (false);
+	if (!fill(copy, x, y + 1))
+		return (false);
+	if (!fill(copy, x - 1, y))
+		return (false);
+	if (!fill(copy, x + 1, y))
+		return (false);
+	return (true);
+}
+
+bool	is_map_closed(char **map)
+{
+	int	x;
+	int	y;
+	char	**copy;
+
+	x = 0;
+	y = 0;
+	find_player(map, &x, &y);
+	copy = copy_map(map);
+	if (!copy)
+		return (false);
+	if (!fill(copy, x, y))
+		return (free_split(copy), false);
+	return (free_split(copy), true);
+}

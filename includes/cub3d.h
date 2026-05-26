@@ -35,7 +35,7 @@ enum
 typedef	struct	s_coordinate
 {
 	bool	present;
-	char	*path;
+	char	*path; //Allocated
 }		t_coordinate;
 
 typedef struct	s_color
@@ -60,7 +60,7 @@ typedef struct	s_elem
 	t_coordinate	west;
 	t_color		floor;
 	t_color		ceiling;
-	char	*line;
+	char	*line; //Allocated
 	int	tmp;
 	char	*tmp_path;
 }		t_elem;
@@ -77,8 +77,8 @@ bool	is_empty_line(char *line);
 //Map parsing and validation
 typedef struct	s_chain
 {
-	char	*line;
-	struct s_chain	*next;
+	char	*line; //Allocated
+	struct s_chain	*next; //Allocated
 }		t_chain;
 
 t_chain	*new_node(char *line);
@@ -86,6 +86,7 @@ void	add_node(t_chain **list, t_chain *node);
 int	size_of_chain(t_chain *chain);
 bool	is_valid_char(t_chain *chain);
 bool	is_single_player(t_chain *chain);
+bool	flood_fill(char **map);
 
 
 typedef struct	s_game

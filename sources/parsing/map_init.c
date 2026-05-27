@@ -67,7 +67,7 @@ static	bool	chain_to_array(t_game *game, t_chain *chain)
 	return (true);
 }
 
-bool	init_game(t_game *game, t_chain *chain)
+bool	init_map(t_game *game, t_chain *chain)
 {
 	if (!is_valid_char(chain))
 		return (false);

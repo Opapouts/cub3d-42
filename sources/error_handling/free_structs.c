@@ -14,3 +14,11 @@ void	free_chain(t_chain *chain)
 	}
 }
 
+void	free_config(t_config *config)
+{
+	free(config->north_path);
+	free(config->south_path);
+	free(config->east_path);
+	free(config->west_path);
+	free(config);
+}

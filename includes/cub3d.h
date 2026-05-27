@@ -105,7 +105,7 @@ typedef struct	s_game
 }		t_game;
 
 bool	is_map_closed(char **map);
-bool	init_game(t_game *game, t_chain *chain);
+bool	init_map(t_game *game, t_chain *chain);
 
 
 
@@ -115,5 +115,6 @@ void	custom_write(char *msg);
 void	custom_free(char *str);
 void	free_split(char **split);
 void	free_chain(t_chain *chain);
+void	free_config(t_config *config);
 
 #endif

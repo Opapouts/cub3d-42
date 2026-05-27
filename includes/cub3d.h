@@ -100,20 +100,20 @@ typedef	struct	s_config
 
 typedef struct	s_game
 {
-	t_config	*config;//Allocated
+	t_config	config;
 	char	**map;//Allocated
 }		t_game;
 
 bool	is_map_closed(char **map);
 bool	init_map(t_game *game, t_chain *chain);
-
-
+bool	parsing(int ac, char **av, t_game *game);
 
 //Random functions
 bool	space(char c);
 void	custom_write(char *msg);
 void	custom_free(char *str);
 void	free_split(char **split);
+void	free_elem(t_elem *elem);
 void	free_chain(t_chain *chain);
 void	free_config(t_config *config);
 

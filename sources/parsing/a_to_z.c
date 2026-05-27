@@ -16,73 +16,48 @@ static	void	set_config_to_null(t_config *config)
 	config->west_path = NULL;
 }
 
-static bool	init_config(t_config *config, t_elem *elem)
+
+static void	init_config(t_config *config, t_elem *elem)
 {
-	config = malloc(sizeof(t_config));
-	if (!config)
-		return (custom_write("Malloc error\n"), false);
 	set_config_to_null(config);
-	config->north_path = ft_strdup(elem->north.path);
-	if (!config->north_path)
-		return (custom_write("Malloc error\n"), free_config(config), false);
-	config->south_path = ft_strdup(elem->south.path);
-	if (!config->south_path)
-		return (custom_write("Malloc error\n"), free_config(config), false);
-	config->east_path = ft_strdup(elem->east.path);
-	if (!config->east_path)
-		return (custom_write("Malloc error\n"), free_config(config), false);
-	config->west_path = ft_strdup(elem->west.path);
-	if (!config->west_path)
-		return (custom_write("Malloc error\n"), free_config(config), false);
+	config->north_path = elem->north.path;
+	config->south_path = elem->south.path;
+	config->east_path = elem->east.path;
+	config->west_path = elem->west.path;
 	config->floor_color = elem->floor.color;
 	config->ceiling_color = elem->ceiling.color;
-	return (true);
 }
+
+static void	nullify_elem(t_elem *elem)
+{
+	elem->north.path = NULL;
+	elem->south.path = NULL;
+	elem->east.path = NULL;
+	elem->west.path = NULL;
+}
+
 //t_elem struct -> t_config
 //Then the map is validated and we init_map
 //Or the map is not valid and we free config 
-void	a_to_z(int ac, char **av, t_game *game)
+bool	parsing(int ac, char **av, t_game *game)
 {
 	int	fd;
 	t_elem	elem;
 	t_chain	*chain;
 
 	if (!is_cub_file(ac, av))
-		exit(EXIT_FAILURE);
+		return (false);
 	fd = open(av[1], O_RDONLY);
 	if (fd < 0)
-	{
-		custom_write("fd open error\n");
-		exit(EXIT_FAILURE);
-	}
+		return (custom_write("fd open error\n"), false);
 	if (!init_elem(fd, &elem))
-	{
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
-	if (!init_config(game->config, &elem))
-	{
-		close(fd);
-		exit(EXIT_FAILURE);//We need to free the t_elem struct 
-	}
+		return (close(fd), false);
+	init_config(&game->config, &elem);
+	nullify_elem(&elem);
 	chain = init_chain(fd);
 	if (!chain)
-	{
-		close(fd);
-		exit(EXIT_FAILURE);
-	}
+		return (close(fd), free_config(&game->config), false);
 	if (!init_map(game, chain))
-	{
-		close(fd);
-		free_chain(chain);
-		exit(EXIT_FAILURE);
-	}
-	free_chain(chain);
-
-
-
-
-
-	
-
-
+		return (free_chain(chain), free_config(&game->config), close(fd), false);
+	return (free_chain(chain), close(fd), true);
+}
